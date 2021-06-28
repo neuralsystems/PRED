@@ -1,6 +1,6 @@
-function [d, labels] = pred(data, varargin)
+function [s, labels] = pred(data, varargin)
 %PRED Pairwise Relative Distance for Class-Vector or Class-Sample datasets
-%   D = PRED(DATA) calculates PRED for Class-Vector datasets. 
+%   S = PRED(DATA) calculates PRED for Class-Vector datasets. 
 %   DATA can be in one of the following formats:
 %       - 2-d cell matrix with scalar or row vector values
 %       - 2-d or 3-d double matrix. For 3-d matrices, values along the 3rd
@@ -8,12 +8,12 @@ function [d, labels] = pred(data, varargin)
 %         combination.
 %       There must be atleast 2 rows and 2 columns. Each column is
 %       considered as a Class and each row is considered as a Vector.
-%   D is a column vector of length n*(n-1)/2, where n = size(DATA, 1),
-%   corresponding to all Vector pairs. Each value of D is averaged over all
+%   S is a column vector of length n*(n-1)/2, where n = size(DATA, 1),
+%   corresponding to all Vector pairs. Each value of S is averaged over all
 %   m*(m-1)/2 pairs of Classes, where m = size(DATA, 2). NaNs are ignored
 %   while calculating the mean.
 %
-%   D = PRED(DATA, CLASS_LABELS) calculates PRED for Class-Sample datasets.
+%   S = PRED(DATA, CLASS_LABELS) calculates PRED for Class-Sample datasets.
 %   DATA can be in one of the following formats:
 %       - 1-d column cell vector with scalar or row vector values
 %       - 1-D column or 2-D double matrix. For 2-d matrices, values along
@@ -22,21 +22,21 @@ function [d, labels] = pred(data, varargin)
 %   CLASS_LABELS specify the Class for each row in DATA and should be
 %   either numeric or a cell of strings. There must be atleast 2 Samples
 %   per Class.
-%   D is a row vector of length m(m-1)/2 corresponding to all Class pairs,
-%   where m = number of Classes. For each pair of Classes i-j, D is
+%   S is a row vector of length m(m-1)/2 corresponding to all Class pairs,
+%   where m = number of Classes. For each pair of Classes i-j, S is
 %   averaged over all n_i*(n_i-1)*n_j*(n_j-1)/2 pairs of Samples (Exhaustive
 %   case) or all n*(n-1)/2 pairs of Samples (Fast case), where n_i, n_j =
 %   number of Samples for Class i and j, respectively; n = max(n_i, n_j).
 %   NaNs are ignored while calculating the mean.
 %
-%   D = PRED(DATA, {}) calculates PRED for Class-Vector datasets but
+%   S = PRED(DATA, {}) calculates PRED for Class-Vector datasets but
 %   generates class_labels automatically as 1, 2, ... depending on the
 %   column number. DATA can be specified in the same way as for
 %   Class-Vector case. Each column is considered as a class and each row as
 %   a Sample.
 %
-%   [D, LABELS] = PRED(...) also returns LABELS, which is a cell matrix
-%   specifying the class or vector pair for each value in D. length(LABELS)
+%   [S, LABELS] = PRED(...) also returns LABELS, which is a cell matrix
+%   specifying the class or vector pair for each value in S. length(LABELS)
 %   is equal to length(D).
 %
 %   [...] = PRED(..., 'PARAM1', VAL1, 'PARAM2', VAL2) specifies additional
@@ -136,9 +136,9 @@ if class_sample
     type = p.Results.type;
     distance = p.Results.distance;
     if strcmp(type, 'exhaustive')
-        [d, temp_labels] = exhaustivepred(processed_data, distance);
+        [s, temp_labels] = exhaustivepred(processed_data, distance);
     else
-        [d, temp_labels] = fastpred(processed_data, false, distance);
+        [s, temp_labels] = fastpred(processed_data, false, distance);
     end
     labels = cellfun(@(x) class_labels_uq(x), temp_labels, 'UniformOutput', false);
 end
@@ -146,11 +146,11 @@ end
 if class_vector
     parse(p, varargin{1:end});
     distance = p.Results.distance;
-    [d, labels] = fastpred(processed_data, true, distance);
+    [s, labels] = fastpred(processed_data, true, distance);
 end
 end
 
-function [d, labels] = fastpred(data, type_vector, distance)
+function [s, labels] = fastpred(data, type_vector, distance)
 
 [n_row, n_col] = size(data);
 % find all row pairs
@@ -160,25 +160,25 @@ n_pair_row = size(pair_row, 1);
 pair_col = nchoosek(1:n_col, 2);
 n_pair_col = size(pair_col, 1);
 
-d = nan(n_pair_row, n_pair_col);
+s = nan(n_pair_row, n_pair_col);
 for i_pair_row = 1:n_pair_row
     for i_pair_col = 1:n_pair_col
         temp_data = [data(pair_row(i_pair_row, 1), pair_col(i_pair_col, :)); data(pair_row(i_pair_row, 2), pair_col(i_pair_col, :))];
         if ~any(cellfun(@isempty, temp_data(:)))
-            d(i_pair_row, i_pair_col) = computepred(temp_data, distance);
+            s(i_pair_row, i_pair_col) = computepred(temp_data, distance);
         end % check for empty cells
     end
 end
 if type_vector
-    d = nanmean(d, 2);
+    s = nanmean(s, 2);
     labels = num2cell(pair_row, 2);
 else
-    d = nanmean(d, 1);
+    s = nanmean(s, 1);
     labels = num2cell(pair_col, 2).';
 end
 end
 
-function [d, labels] = exhaustivepred(data, distance)
+function [s, labels] = exhaustivepred(data, distance)
 
 [n_row, n_col] = size(data);
 % find all row pairs
@@ -189,7 +189,7 @@ n_pair_row = size(pair_row, 1);
 pair_col = nchoosek(1:n_col, 2);
 n_pair_col = size(pair_col, 1);
 
-d = nan(1, n_pair_col);
+s = nan(1, n_pair_col);
 for i_pair_col = 1:n_pair_col
     temp_measure = nan(n_pair_row, n_pair_row, 2);
     for i_pair_row_1 = 1:n_pair_row
@@ -203,18 +203,18 @@ for i_pair_col = 1:n_pair_col
             end % check for empty cells
         end
     end
-    d(1, i_pair_col) = nanmean(temp_measure(:));
+    s(1, i_pair_col) = nanmean(temp_measure(:));
 end
 labels = num2cell(pair_col, 2).';
 end
 
-function d = computepred(data, distance)
+function s = computepred(data, distance)
 row_1 = data(1, :);
 row_2 = data(2, :);
 pred_fn = @(d1, d2) (d2 - d1) ./ (d2 + d1);
 d_1 = arrayfun(@(x) pdist([row_2{x}; row_1{x}], distance), 1:2);
 d_2 = arrayfun(@(x) pdist([row_2{end - x + 1}; row_1{x}], distance), 1:2);
-d = pred_fn(mean(d_1), mean(d_2));
+s = pred_fn(mean(d_1), mean(d_2));
 end
 
 function processed_data = process2dcelldata(data)
