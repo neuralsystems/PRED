@@ -1,6 +1,6 @@
 function [s, labels] = pred(data, varargin)
 %PRED Pairwise Relative Distance for Class-Vector or Class-Sample datasets
-%   S = PRED(DATA) calculates PRED for Class-Vector datasets. 
+%   S = PRED(DATA) calculates PRED for Class-Vector datasets.
 %   DATA can be in one of the following formats:
 %       - 2-d cell matrix with scalar or row vector values
 %       - 2-d or 3-d double matrix. For 3-d matrices, values along the 3rd
@@ -61,7 +61,7 @@ function [s, labels] = pred(data, varargin)
 %*************************************************************************%
 % Author: Aarush Mohit Mittal
 % Contact: aarush (dot) mohit (at) gmail (dot) com
-% Version: 1.0
+% Version: 1.1
 %*************************************************************************%
 
 assert(~isempty(data), 'PRED:EmptyData', 'Required non-empty data')
@@ -170,10 +170,10 @@ for i_pair_row = 1:n_pair_row
     end
 end
 if type_vector
-    s = nanmean(s, 2);
-    labels = num2cell(pair_row, 2);
+    s = mean(s, 2);
+    labels = num2cell(pair_row, 2, 'omitnan');
 else
-    s = nanmean(s, 1);
+    s = mean(s, 1, 'omitnan');
     labels = num2cell(pair_col, 2).';
 end
 end
@@ -203,7 +203,7 @@ for i_pair_col = 1:n_pair_col
             end % check for empty cells
         end
     end
-    s(1, i_pair_col) = nanmean(temp_measure(:));
+    s(1, i_pair_col) = mean(temp_measure(:), 'omitnan');
 end
 labels = num2cell(pair_col, 2).';
 end
