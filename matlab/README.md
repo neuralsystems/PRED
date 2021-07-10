@@ -4,9 +4,12 @@
 MATLAB implementation of Pairwise Relative Distance (PRED) for Class-Vector or Class-Sample datasets
 
 ## Dependencies
-
 - MATLAB (Tested on R2016a and above)
 - Statistics and Machine Learning Toolbox (MATLAB)
+
+## How to use
+- Run `predtest` to ensure function works correctly. All tests should show PASS.
+- Use the `pred` function for either class-vector or class-sample type datasets using appropriate formatting
 
 ## Function Help
 ```
@@ -30,7 +33,7 @@ DATA can be in one of the following formats:
     the 2nd dimension are used as vector values for each Sample.
     There must be at least 4 rows in data.
 CLASS_LABELS specify the Class for each row in DATA and should be
-either numeric or a cell of strings. There must be atleast 2 Samples
+either numeric or a cell of strings. There must be at least 2 Samples
 per Class.
 S is a row vector of length m(m-1)/2 corresponding to all Class pairs,
 where m = number of Classes. For each pair of Classes i-j, S is

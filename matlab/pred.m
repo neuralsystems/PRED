@@ -20,7 +20,7 @@ function [s, labels] = pred(data, varargin)
 %         the 2nd dimension are used as vector values for each Sample.
 %       There must be at least 4 rows in data.
 %   CLASS_LABELS specify the Class for each row in DATA and should be
-%   either numeric or a cell of strings. There must be atleast 2 Samples
+%   either numeric or a cell of strings. There must be at least 2 Samples
 %   per Class.
 %   S is a row vector of length m(m-1)/2 corresponding to all Class pairs,
 %   where m = number of Classes. For each pair of Classes i-j, S is
