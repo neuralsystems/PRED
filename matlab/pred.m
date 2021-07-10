@@ -6,7 +6,7 @@ function [s, labels] = pred(data, varargin)
 %       - 2-d or 3-d double matrix. For 3-d matrices, values along the 3rd
 %         dimension are used as vector values for each Class and Vector
 %         combination.
-%       There must be atleast 2 rows and 2 columns. Each column is
+%       There must be at least 2 rows and 2 columns. Each column is
 %       considered as a Class and each row is considered as a Vector.
 %   S is a column vector of length n*(n-1)/2, where n = size(DATA, 1),
 %   corresponding to all Vector pairs. Each value of S is averaged over all
@@ -18,7 +18,7 @@ function [s, labels] = pred(data, varargin)
 %       - 1-d column cell vector with scalar or row vector values
 %       - 1-D column or 2-D double matrix. For 2-d matrices, values along
 %         the 2nd dimension are used as vector values for each Sample.
-%       There must be atleast 4 rows in data.
+%       There must be at least 4 rows in data.
 %   CLASS_LABELS specify the Class for each row in DATA and should be
 %   either numeric or a cell of strings. There must be atleast 2 Samples
 %   per Class.
@@ -62,6 +62,15 @@ function [s, labels] = pred(data, varargin)
 % Author: Aarush Mohit Mittal
 % Contact: aarush (dot) mohit (at) gmail (dot) com
 % Version: 1.1
+%*************************************************************************%
+
+%*************************************************************************%
+% Changelog:
+% v1.1 (2021-07-10):
+%   - Replaced nanmean with mean for future stability
+%   - Fixed brackets for backwards compatibility
+% v1.0 (2021-06-28):
+%   - Initial release
 %*************************************************************************%
 
 assert(~isempty(data), 'PRED:EmptyData', 'Required non-empty data')

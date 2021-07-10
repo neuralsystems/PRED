@@ -75,7 +75,7 @@ end
 
 function formattest(test_id, error_id, varargin)
 try
-    fprintf("Format Test: %s.....", test_id)
+    fprintf('Format Test: %s.....', test_id)
     p = pred(varargin{:});
     fprintf('<strong>FAIL</strong> (pred = %.4f)\n', p);
 catch ME
@@ -88,7 +88,7 @@ end
 end
 
 function valuetest(test_id, value, varargin)
-fprintf("Value Test: %s.....", test_id)
+fprintf('Value Test: %s.....', test_id)
 p = pred(varargin{:});
 if isequaln(round(p, 4), round(value, 4))
     fprintf('PASS\n')
