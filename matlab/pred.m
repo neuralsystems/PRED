@@ -80,7 +80,7 @@ else
     assert(any(~isnan(data(:))), 'PRED:AllNANValues', 'Required non-nan data')
 end
 
-if nargin > 1
+if nargin > 1 && ~verLessThan('matlab','9.2')
     [varargin{:}] = convertStringsToChars(varargin{:});
 end
 class_sample = false;
@@ -179,8 +179,8 @@ for i_pair_row = 1:n_pair_row
     end
 end
 if type_vector
-    s = mean(s, 2);
-    labels = num2cell(pair_row, 2, 'omitnan');
+    s = mean(s, 2, 'omitnan');
+    labels = num2cell(pair_row, 2);
 else
     s = mean(s, 1, 'omitnan');
     labels = num2cell(pair_col, 2).';
