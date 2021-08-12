@@ -1,4 +1,6 @@
 # PRED
-**P**airwise **Re**lative **D**istance (**PRED**) is a metric of vector similarity and class separability. This repository contains code for calculating it in:
 
-- [MATLAB](matlab/README.md)
+**P**airwise **RE**lative **D**istance (**PRED**) is a metric of vector similarity and class separability. This repository currently hosts the following implementations of PRED:
+
+-   [MATLAB](matlab/README.md)
+-   [Python](python/README.md)
