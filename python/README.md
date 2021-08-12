@@ -28,3 +28,6 @@ Returns:
 Each value of S is averaged over all m*(m-1)/2 pairs of Classes, where m = data.shape[1]. NaNs are ignored
 while calculating the mean.
 ```
+
+## Acknowledgements
+- Thanks to Arjit Kant Gupta for the 2D array implementation of PRED in python
